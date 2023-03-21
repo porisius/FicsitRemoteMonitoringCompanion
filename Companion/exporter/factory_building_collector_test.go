@@ -16,7 +16,7 @@ var _ = Describe("FactoryBuildingCollector", func() {
 
 		FRMServer.ReturnsFactoryBuildings([]exporter.BuildingDetail{
 			{
-				Building: "Smelter",
+				Name: "Smelter",
 				Location: exporter.Location{
 					X:        100.0,
 					Y:        200.0,

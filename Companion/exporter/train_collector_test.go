@@ -12,7 +12,7 @@ import (
 func updateTrain(station string) {
 	FRMServer.ReturnsTrainData([]exporter.TrainDetails{
 		{
-			TrainName:     "Train1",
+			Name:     "Train1",
 			PowerConsumed: 0,
 			TrainStation:  station,
 			Derailed:      false,
@@ -24,7 +24,7 @@ func updateTrain(station string) {
 			},
 		},
 		{
-			TrainName:     "Not In Use",
+			Name:     "Not In Use",
 			PowerConsumed: 0,
 			TrainStation:  "Offsite",
 			Derailed:      false,
@@ -45,7 +45,7 @@ var _ = Describe("TrainCollector", func() {
 
 		FRMServer.ReturnsTrainData([]exporter.TrainDetails{
 			{
-				TrainName:     "Train1",
+				Name:     "Train1",
 				PowerConsumed: 67,
 				TrainStation:  "NextStation",
 				Derailed:      false,
@@ -56,7 +56,7 @@ var _ = Describe("TrainCollector", func() {
 				},
 			},
 			{
-				TrainName:     "DerailedTrain",
+				Name:     "DerailedTrain",
 				PowerConsumed: 0,
 				TrainStation:  "NextStation",
 				Derailed:      true,

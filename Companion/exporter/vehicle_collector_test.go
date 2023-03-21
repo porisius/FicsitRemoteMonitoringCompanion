@@ -12,8 +12,7 @@ import (
 func updateLocation(x float64, y float64, rotation int) {
 	FRMServer.ReturnsVehicleData([]exporter.VehicleDetails{
 		{
-			Id:           "1",
-			VehicleType:  "Truck",
+			Name:  "Truck",
 			ForwardSpeed: 0,
 			Location: exporter.Location{
 				X:        x,
@@ -27,8 +26,7 @@ func updateLocation(x float64, y float64, rotation int) {
 			PathName:      "Path",
 		},
 		{
-			Id:           "2",
-			VehicleType:  "Truck",
+			Name:  "Truck",
 			ForwardSpeed: 0,
 			Location: exporter.Location{
 				X:        0,
@@ -53,8 +51,7 @@ var _ = Describe("VehicleCollector", func() {
 
 		FRMServer.ReturnsVehicleData([]exporter.VehicleDetails{
 			{
-				Id:           "1",
-				VehicleType:  "Truck",
+				Name:  "Truck",
 				ForwardSpeed: 80,
 				Location: exporter.Location{
 					X:        1000,

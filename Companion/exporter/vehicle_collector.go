@@ -11,13 +11,12 @@ type VehicleCollector struct {
 }
 
 type VehicleDetails struct {
-	Id            string   `json:"ID"`
-	VehicleType   string   `json:"VehicleType"`
+	Name   		  string   `json:"Name"`
 	Location      Location `json:"location"`
 	ForwardSpeed  float64  `json:"ForwardSpeed"`
 	AutoPilot     bool     `json:"AutoPilot"`
 	FuelType      string   `json:"FuelType"`
-	FuelInventory float64  `json"FuelInventory"`
+	FuelInventory float64  `json:"FuelInventory"`
 	PathName      string   `json:"PathName"`
 	DepartTime    time.Time
 	Departed      bool
@@ -26,7 +25,7 @@ type VehicleDetails struct {
 func (v *VehicleDetails) recordElapsedTime() {
 	now := Clock.Now()
 	tripSeconds := now.Sub(v.DepartTime).Seconds()
-	VehicleRoundTrip.WithLabelValues(v.Id, v.VehicleType, v.PathName).Set(tripSeconds)
+	VehicleRoundTrip.WithLabelValues(v.Name, v.PathName).Set(tripSeconds)
 	v.Departed = false
 }
 
@@ -45,19 +44,18 @@ func (v *VehicleDetails) startTracking(trackedVehicles map[string]*VehicleDetail
 	// likely at a station or somewhere easier to track.
 	if v.ForwardSpeed < 10 {
 		trackedVehicle := VehicleDetails{
-			Id:          v.Id,
 			Location:    v.Location,
-			VehicleType: v.VehicleType,
+			Name: 		 v.Name,
 			PathName:    v.PathName,
 			Departed:    false,
 		}
-		trackedVehicles[v.Id] = &trackedVehicle
+		trackedVehicles[v.Name] = &trackedVehicle
 	}
 }
 
 func (d *VehicleDetails) handleTimingUpdates(trackedVehicles map[string]*VehicleDetails) {
 	if d.AutoPilot {
-		vehicle, exists := trackedVehicles[d.Id]
+		vehicle, exists := trackedVehicles[d.Name]
 		if exists && vehicle.isCompletingTrip(d.Location) {
 			vehicle.recordElapsedTime()
 		} else if exists && vehicle.isStartingTrip(d.Location) {
@@ -68,9 +66,9 @@ func (d *VehicleDetails) handleTimingUpdates(trackedVehicles map[string]*Vehicle
 		}
 	} else {
 		//remove manual vehicles, nothing to mark
-		_, exists := trackedVehicles[d.Id]
+		_, exists := trackedVehicles[d.Name]
 		if exists {
-			delete(trackedVehicles, d.Id)
+			delete(trackedVehicles, d.Name)
 		}
 	}
 }
@@ -91,7 +89,7 @@ func (c *VehicleCollector) Collect() {
 	}
 
 	for _, d := range details {
-		VehicleFuel.WithLabelValues(d.Id, d.VehicleType, d.FuelType).Set(d.FuelInventory)
+		VehicleFuel.WithLabelValues(d.Name, d.FuelType).Set(d.FuelInventory)
 
 		d.handleTimingUpdates(c.TrackedVehicles)
 	}

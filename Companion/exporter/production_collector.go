@@ -9,7 +9,7 @@ type ProductionCollector struct {
 }
 
 type ProductionDetails struct {
-	ItemName           string   `json:"ItemName"`
+	Name           string   `json:"Name"`
 	ProdPercent        float64 `json:"ProdPercent"`
 	ConsPercent        float64 `json:"ConsPercent"`
 	CurrentProduction  float64  `json:"CurrentProd"`
@@ -33,12 +33,12 @@ func (c *ProductionCollector) Collect() {
 	}
 
 	for _, d := range details {
-		ItemsProducedPerMin.WithLabelValues(d.ItemName).Set(d.CurrentProduction)
-		ItemsConsumedPerMin.WithLabelValues(d.ItemName).Set(d.CurrentConsumption)
+		ItemsProducedPerMin.WithLabelValues(d.Name).Set(d.CurrentProduction)
+		ItemsConsumedPerMin.WithLabelValues(d.Name).Set(d.CurrentConsumption)
 
-		ItemProductionCapacityPercent.WithLabelValues(d.ItemName).Set(d.ProdPercent)
-		ItemConsumptionCapacityPercent.WithLabelValues(d.ItemName).Set(d.ConsPercent)
-		ItemProductionCapacityPerMinute.WithLabelValues(d.ItemName).Set(d.MaxProd)
-		ItemConsumptionCapacityPerMinute.WithLabelValues(d.ItemName).Set(d.MaxConsumed)
+		ItemProductionCapacityPercent.WithLabelValues(d.Name).Set(d.ProdPercent)
+		ItemConsumptionCapacityPercent.WithLabelValues(d.Name).Set(d.ConsPercent)
+		ItemProductionCapacityPerMinute.WithLabelValues(d.Name).Set(d.MaxProd)
+		ItemConsumptionCapacityPerMinute.WithLabelValues(d.Name).Set(d.MaxConsumed)
 	}
 }

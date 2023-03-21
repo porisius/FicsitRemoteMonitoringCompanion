@@ -9,7 +9,7 @@ var (
 		Name: "drone_port_battery_rate",
 		Help: "Rate of batteries used",
 	}, []string{
-		"id",
+		"name",
 		"home_station",
 		"paired_station",
 	})
@@ -17,7 +17,7 @@ var (
 		Name: "drone_port_round_trip_seconds",
 		Help: "Recorded drone round trip time in seconds",
 	}, []string{
-		"id",
+		"name",
 		"home_station",
 		"paired_station",
 	})

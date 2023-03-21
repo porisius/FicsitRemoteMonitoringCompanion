@@ -14,7 +14,7 @@ type TimeTable struct {
 	StationName string `json:"StationName"`
 }
 type TrainDetails struct {
-	TrainName        string      `json:"TrainName"`
+	Name        string      `json:"Name"`
 	PowerConsumed    float64     `json:"PowerConsumed"`
 	TrainStation     string      `json:"TrainStation"`
 	Derailed         bool        `json:"Derailed"`
@@ -35,7 +35,7 @@ func NewTrainCollector(frmAddress string) *TrainCollector {
 func (t *TrainDetails) recordRoundTripTime(now time.Time) {
 	if len(t.TimeTable) <= t.StationCounter {
 		roundTripSeconds := now.Sub(t.FirstArrivalTime).Seconds()
-		TrainRoundTrip.WithLabelValues(t.TrainName).Set(roundTripSeconds)
+		TrainRoundTrip.WithLabelValues(t.Name).Set(roundTripSeconds)
 		t.StationCounter = 0
 		t.FirstArrivalTime = now
 	}
@@ -43,7 +43,7 @@ func (t *TrainDetails) recordRoundTripTime(now time.Time) {
 
 func (t *TrainDetails) recordSegmentTripTime(destination string, now time.Time) {
 	tripSeconds := now.Sub(t.ArrivalTime).Seconds()
-	TrainSegmentTrip.WithLabelValues(t.TrainName, t.TrainStation, destination).Set(tripSeconds)
+	TrainSegmentTrip.WithLabelValues(t.Name, t.TrainStation, destination).Set(tripSeconds)
 }
 
 func (t *TrainDetails) recordNextStation(d *TrainDetails) {
@@ -68,18 +68,18 @@ func (t *TrainDetails) markFirstStation(d *TrainDetails) {
 
 func (t *TrainDetails) startTracking(trackedTrains map[string]*TrainDetails) {
 	trackedTrain := TrainDetails{
-		TrainName:      t.TrainName,
+		Name:      t.Name,
 		TrainStation:   t.TrainStation,
 		StationCounter: 0,
 		TimeTable:      t.TimeTable,
 	}
-	trackedTrains[t.TrainName] = &trackedTrain
+	trackedTrains[t.Name] = &trackedTrain
 }
 
 func (d *TrainDetails) handleTimingUpdates(trackedTrains map[string]*TrainDetails) {
 	// track self driving train timing
 	if d.Status == "TS_SelfDriving" {
-		train, exists := trackedTrains[d.TrainName]
+		train, exists := trackedTrains[d.Name]
 		if exists && !train.FirstArrivalTime.IsZero() {
 			train.recordNextStation(d)
 		} else if exists {
@@ -89,9 +89,9 @@ func (d *TrainDetails) handleTimingUpdates(trackedTrains map[string]*TrainDetail
 		}
 	} else {
 		//remove manual trains, nothing to mark
-		_, exists := trackedTrains[d.TrainName]
+		_, exists := trackedTrains[d.Name]
 		if exists {
-			delete(trackedTrains, d.TrainName)
+			delete(trackedTrains, d.Name)
 		}
 	}
 }
@@ -105,10 +105,10 @@ func (c *TrainCollector) Collect() {
 	}
 
 	for _, d := range details {
-		TrainPower.WithLabelValues(d.TrainName).Set(d.PowerConsumed)
+		TrainPower.WithLabelValues(d.Name).Set(d.PowerConsumed)
 
 		isDerailed := parseBool(d.Derailed)
-		TrainDerailed.WithLabelValues(d.TrainName).Set(isDerailed)
+		TrainDerailed.WithLabelValues(d.Name).Set(isDerailed)
 
 		d.handleTimingUpdates(c.TrackedTrains)
 	}

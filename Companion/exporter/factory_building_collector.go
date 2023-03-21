@@ -27,7 +27,7 @@ func (c *FactoryBuildingCollector) Collect() {
 		for _, prod := range building.Production {
 			MachineItemsProducedPerMin.WithLabelValues(
 				prod.Name,
-				building.Building,
+				building.Name,
 				strconv.FormatFloat(building.Location.X, 'f', -1, 64),
 				strconv.FormatFloat(building.Location.Y, 'f', -1, 64),
 				strconv.FormatFloat(building.Location.Z, 'f', -1, 64),
@@ -35,7 +35,7 @@ func (c *FactoryBuildingCollector) Collect() {
 
 			MachineItemsProducedEffiency.WithLabelValues(
 				prod.Name,
-				building.Building,
+				building.Name,
 				strconv.FormatFloat(building.Location.X, 'f', -1, 64),
 				strconv.FormatFloat(building.Location.Y, 'f', -1, 64),
 				strconv.FormatFloat(building.Location.Z, 'f', -1, 64),

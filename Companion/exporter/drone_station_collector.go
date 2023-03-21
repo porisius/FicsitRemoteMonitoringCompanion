@@ -9,14 +9,14 @@ type DroneStationCollector struct {
 }
 
 type DroneStationDetails struct {
-	Id                     string  `json:"ID"`
+	Name            	   string  `json:"Name"`
 	HomeStation            string  `json:"HomeStation"`
 	PairedStation          string  `json:"PairedStation"`
 	DroneStatus            string  `json:"DroneStatus"`
 	AvgIncRate             float64 `json:"AvgIncRate"`
 	AvgIncStack            float64 `json:"AvgIncStack"`
 	AvgOutRate             float64 `json:"AvgOutRate"`
-	AvgOutStack            float64 `json"AvgOutStack"`
+	AvgOutStack            float64 `json:"AvgOutStack"`
 	AvgRndTrip             string  `json:"AvgRndTrip"`
 	AvgTotalIncRate        float64 `json:"AvgTotalIncRate"`
 	AvgTotalIncStack       float64 `json:"AvgTotalIncStack"`
@@ -53,15 +53,15 @@ func (c *DroneStationCollector) Collect() {
 		return
 	}
 	for _, d := range details {
-		id := d.Id
+		name := d.Name
 		home := d.HomeStation
 		paired := d.PairedStation
 
-		DronePortBatteryRate.WithLabelValues(id, home, paired).Set(d.EstBatteryRate)
+		DronePortBatteryRate.WithLabelValues(name, home, paired).Set(d.EstBatteryRate)
 
 		roundTrip := parseTimeSeconds(d.LatestRndTrip)
 		if roundTrip != nil {
-			DronePortRndTrip.WithLabelValues(id, home, paired).Set(*roundTrip)
+			DronePortRndTrip.WithLabelValues(name, home, paired).Set(*roundTrip)
 		}
 	}
 }

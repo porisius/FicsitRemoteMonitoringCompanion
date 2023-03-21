@@ -15,7 +15,7 @@ var _ = Describe("ProductionCollector", func() {
 
 		FRMServer.ReturnsProductionData([]exporter.ProductionDetails{
 			{
-				ItemName:           "Iron Rod",
+				Name:           "Iron Rod",
 				ProdPercent:        0.1,
 				ConsPercent:        0.2,
 				CurrentProduction:  10,
