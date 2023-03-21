@@ -5,14 +5,15 @@ import (
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 
-	"github.com/benbjohnson/clock"
 	"time"
+
+	"github.com/benbjohnson/clock"
 )
 
 func updateTrain(station string) {
 	FRMServer.ReturnsTrainData([]exporter.TrainDetails{
 		{
-			Name:     "Train1",
+			Name:          "Train1",
 			PowerConsumed: 0,
 			TrainStation:  station,
 			Derailed:      false,
@@ -24,7 +25,7 @@ func updateTrain(station string) {
 			},
 		},
 		{
-			Name:     "Not In Use",
+			Name:          "Not In Use",
 			PowerConsumed: 0,
 			TrainStation:  "Offsite",
 			Derailed:      false,
@@ -45,7 +46,7 @@ var _ = Describe("TrainCollector", func() {
 
 		FRMServer.ReturnsTrainData([]exporter.TrainDetails{
 			{
-				Name:     "Train1",
+				Name:          "Train1",
 				PowerConsumed: 67,
 				TrainStation:  "NextStation",
 				Derailed:      false,
@@ -56,7 +57,7 @@ var _ = Describe("TrainCollector", func() {
 				},
 			},
 			{
-				Name:     "DerailedTrain",
+				Name:          "DerailedTrain",
 				PowerConsumed: 0,
 				TrainStation:  "NextStation",
 				Derailed:      true,
